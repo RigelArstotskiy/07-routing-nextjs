@@ -14,7 +14,7 @@ export default function Footer() {
       <div className={css.content}>
         <p>© {year !== null ? year : "..."} NoteHub. All rights reserved.</p>
         <div className={css.wrap}>
-          <p>Developer: Kravets</p>
+          <p>Developer: Varha</p>
           <p>
             Contact us:
             <a href="mailto:student@notehub.app">student@notehub.app</a>
