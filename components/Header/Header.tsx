@@ -1,38 +1,17 @@
-"use client";
-
 import Link from "next/link";
 import css from "./Header.module.css";
-import { usePathname } from "next/navigation";
+import TagsMenu from "../TagsMenu/TagsMenu";
 
-export default function Header() {
-  const pathname = usePathname();
-
+export default async function Header() {
   return (
     <header className={css.header}>
-      <Link href="/" aria-label="Home">
+      <Link href="/" aria-label="Home" className={css.headerLink}>
         NoteHub
       </Link>
       <nav aria-label="Main Navigation">
         <ul className={css.navigation}>
-          <li>
-            <Link
-              className={
-                pathname === "/" ? `${css.active}` : `${css.none_active}`
-              }
-              href="/"
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              className={
-                pathname === "/notes" ? `${css.active}` : `${css.none_active}`
-              }
-              href="/notes"
-            >
-              Notes
-            </Link>
+          <li className={css.navigationItem}>
+            <TagsMenu />
           </li>
         </ul>
       </nav>
