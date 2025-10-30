@@ -1,11 +1,11 @@
-import css from "./Modal.module.css";
-import { useEffect, type ReactNode } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import css from "./Modal.module.css";
 
-type ModalProps = {
+interface ModalProps {
   onClose: () => void;
-  children: ReactNode;
-};
+  children: React.ReactNode;
+}
 
 export default function Modal({ onClose, children }: ModalProps) {
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -14,15 +14,16 @@ export default function Modal({ onClose, children }: ModalProps) {
     }
   };
 
-  //! 🔹 Escape closing
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
       }
     };
+
     document.addEventListener("keydown", handleKeyDown);
     document.body.style.overflow = "hidden";
+
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";

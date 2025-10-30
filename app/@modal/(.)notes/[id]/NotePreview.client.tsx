@@ -1,10 +1,11 @@
 "use client";
-
 import css from "./NotePreview.module.css";
-import { useParams, useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { getSingleNote } from "@/lib/api";
 import Modal from "@/components/Modal/Modal";
+
+import { fetchNoteById } from "@/lib/api";
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 export default function NotePreviewClient() {
   const { id } = useParams<{ id: string }>();
@@ -12,34 +13,38 @@ export default function NotePreviewClient() {
     data: note,
     isLoading,
     isError,
-    error,
+    isSuccess,
   } = useQuery({
     queryKey: ["note", id],
-    queryFn: () => getSingleNote(id),
+    queryFn: () => fetchNoteById(id),
     refetchOnMount: false,
   });
   const router = useRouter();
-  const handleCloseModal = () => router.back();
+  const closePreviewModal = () => {
+    router.back();
+  };
 
   return (
-    <div className={css.container}>
-      <Modal onClose={handleCloseModal}>
-        {note && (
-          <div className={css.item}>
-            <h2 className={css.header}>{note.title}</h2>
-            <p className={css.content}>{note.content}</p>
-            <div className={css.header}>
-              <span className={css.tag}>{note.tag}</span>
+    <Modal onClose={closePreviewModal}>
+      {
+        <div className={css.container}>
+          {isLoading && <p>Loading, please wait...</p>}
+          {isError && !note && <p>Something went wrong.</p>}
+          {isSuccess && (
+            <div className={css.item}>
+              <button className={css.backBtn} onClick={closePreviewModal}>
+                Back
+              </button>
+              <div className={css.header}>
+                <h2>{note.title}</h2>
+              </div>
+              <p className={css.content}>{note.content}</p>
+              <p className={css.tag}>{note.tag}</p>
               <p className={css.date}>{note.createdAt}</p>
             </div>
-            <button className={css.backBtn} onClick={handleCloseModal}>
-              {`< Back`}
-            </button>
-          </div>
-        )}
-        {isLoading && <p>Loading...</p>}
-        {isError && <p>Ops something went wrong... {error.message}</p>}
-      </Modal>
-    </div>
+          )}
+        </div>
+      }
+    </Modal>
   );
 }
